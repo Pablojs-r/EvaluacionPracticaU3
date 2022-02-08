@@ -15,6 +15,10 @@ import lista.controaldor.PilaCola;
  * @author pablo
  */
 public abstract class Grafo implements Serializable {
+    private Integer[][] matrizAdy;
+    private Integer[] camino;
+    private Integer[] D;
+    private Boolean[] F;
 
     public abstract Integer numVertices();
 
@@ -181,116 +185,32 @@ public abstract class Grafo implements Serializable {
             }
         }
     }
-
-    //Floyd
-    private Double[][] matrizAdya;
-    private Integer[][] caminos;
-
-    public String floyd(Integer NI, Integer NF) {
-        //Llenar Matriz Adyacencias
-        matrizAdya = new Double[numVertices()][numVertices()];
-        caminos = new Integer[numVertices()][numVertices()];
+    public void Dijkstra(Integer origen){
         for (int i = 0; i < numVertices(); i++) {
-            Lista<Adyacencia> adyacencias = adyacentes((i + 1));
-            for (int j = 0; j < adyacencias.tamanio(); j++) {
-                Adyacencia aux = adyacencias.consultarDatoPosicion(j);
-                matrizAdya[i][aux.getDestino() - 1] = aux.getPeso();
-            }
+            F[i] = false;
+            D[i] = matrizAdy[origen][i];
+            camino[i] = origen;
         }
-        for (int i = 0; i < numVertices(); i++) {
-            for (int j = 0; j < numVertices(); j++) {
-                if (matrizAdya[i][j] == null) {
-                    matrizAdya[i][j] = -1.0;
-                }
-            }
-        }
-        imprimirMatrizAdya();
-
-        //Llenar matriz caminos 
-        for (int i = 0; i < numVertices(); i++) {
-            int k = 1;
-            for (int j = 0; j < numVertices(); j++) {
-                if (i == j) {
-                    caminos[i][j] = 0;
-                } else {
-                    caminos[i][j] = k;
-                }
-                k++;
-            }
-        }
-        imprimirCaminos();
-
-        Double anterior, ik, kj, actual, minimo = 0.0;
-        for (int k = 0; k < numVertices(); k++) {
-            for (int i = 0; i < numVertices(); i++) {
-                for (int j = 0; j < numVertices(); j++) {
-                    if (i != j && k != i && k != j) {
-                        anterior = matrizAdya[i][j];
-                        ik = matrizAdya[i][k];
-                        kj = matrizAdya[k][j];
-                        if (ik == -1 || kj == -1) {
-                            actual = -1.0;
-                        } else {
-                            actual = ik + kj;
-                        }
-                        if (actual != -1 && (actual < anterior || anterior == - 1)) {
-                            minimo = actual;
-                            caminos[i][j] = (k + 1);
-                        } else {
-                            minimo = anterior;
-                        }
-                        matrizAdya[i][j] = minimo;
+        F[origen] = true;
+        D[origen] = 0;
+        for (int i = 1; i < numVertices(); i++) {
+            int v = minimo();
+            F[v] = true;
+            for (int j = 1; j < numVertices(); j++) {
+                if (!F[j]) {
+                    if ((D[v] + matrizAdy[v][j]) < D[j]) {
+                        D[j] = D[v] + matrizAdy[v][j];
+                        camino[j] = v;
                     }
                 }
             }
         }
-
-        //Llenar matriz caminso con 0 en su diagonal
-        for (int i = 0; i < numVertices(); i++) {
-            for (int j = 0; j < numVertices(); j++) {
-                if (caminos[i][j] == null) {
-                    caminos[i][j] = 0;
-                }
-            }
-        }
-
-        imprimirMatrizAdya();
-        imprimirCaminos();
-
-        //CAMINOS
-        Integer ant = -1;
-        String caminoOp = "";
-        System.out.println("CAMINOOP");
-        Integer ni = NI - 1;
-        Integer nf = NF - 1;
-        while (caminos[ni][nf] != ni && ant != nf) {
-            caminoOp = caminos[ni][nf] + "---->" + caminoOp;
-            ant = nf;
-            nf = caminos[ni][nf];
-        }
-        System.out.println(caminoOp);
-        return caminoOp;
     }
-    
-    
-    public void imprimirMatrizAdya() {
-        System.out.println("MATRIZ ADYACENCIAS");
-        for (int i = 0; i < numVertices(); i++) {
-            for (int j = 0; j < numVertices(); j++) {
-                System.out.print(matrizAdya[i][j] + "\t");
-            }
-            System.out.println("");
+    private Integer minimo(){
+        int v = 1;
+        for (int i = 1; i < numVertices(); i++) {
+            
         }
-    }
-
-    private void imprimirCaminos() {
-        System.out.println("MATRIZ CAMINOS");
-        for (int i = 0; i < numVertices(); i++) {
-            for (int j = 0; j < numVertices(); j++) {
-                System.out.print(caminos[i][j] + "\t");
-            }
-            System.out.println("");
-        }
-    }
-
+        return v;
+    }    
 }
