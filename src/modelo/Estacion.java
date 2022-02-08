@@ -5,16 +5,16 @@
  */
 package modelo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author pablo
  */
-public class Escuela {
-
+public class Estacion implements Serializable{
     private Long id;
     private String nombre;
-    private String ubicacion;
-    private Double longituda;
+    private Double longitud;
     private Double latitud;
 
     public Long getId() {
@@ -33,20 +33,12 @@ public class Escuela {
         this.nombre = nombre;
     }
 
-    public String getUbicacion() {
-        return ubicacion;
+    public Double getLongitud() {
+        return longitud;
     }
 
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-
-    public Double getLongituda() {
-        return longituda;
-    }
-
-    public void setLongituda(Double longituda) {
-        this.longituda = longituda;
+    public void setLongitud(Double longitud) {
+        this.longitud = longitud;
     }
 
     public Double getLatitud() {
@@ -57,4 +49,10 @@ public class Escuela {
         this.latitud = latitud;
     }
 
+    @Override
+    public String toString() {
+        return nombre;
+    }
+    
+    
 }
