@@ -5,11 +5,13 @@
  */
 package modelo;
 
+import java.io.Serializable;
+
 /**
  *
  * @author pablo
  */
-public class Escuela {
+public class Escuela implements Serializable {
 
     private Long id;
     private String nombre;
@@ -41,11 +43,11 @@ public class Escuela {
         this.ubicacion = ubicacion;
     }
 
-    public Double getLongituda() {
+    public Double getLongitud() {
         return longituda;
     }
 
-    public void setLongituda(Double longituda) {
+    public void setLongitud(Double longituda) {
         this.longituda = longituda;
     }
 
@@ -55,6 +57,11 @@ public class Escuela {
 
     public void setLatitud(Double latitud) {
         this.latitud = latitud;
+    }
+
+    @Override
+    public String toString() {
+        return nombre;
     }
 
 }

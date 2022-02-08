@@ -20,7 +20,7 @@ public class TableEscuela extends AbstractTableModel{
         return grafoND;
     }
 
-    public void setGrafoD(GrafoEtiquetaND grafoD) {
+    public void setGrafoND(GrafoEtiquetaND grafoD) {
         this.grafoND = grafoD;
         generarColumnas();
     }

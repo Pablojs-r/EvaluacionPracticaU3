@@ -7,6 +7,7 @@ package Controlador.grafo;
 
 import Controlador.exepcion.AdyacenciaExepcion;
 import java.io.Serializable;
+import java.util.Objects;
 import lista.controaldor.Lista;
 import lista.controaldor.PilaCola;
 
@@ -15,6 +16,7 @@ import lista.controaldor.PilaCola;
  * @author pablo
  */
 public abstract class Grafo implements Serializable {
+
     private Integer[][] matrizAdy;
     private Integer[] camino;
     private Integer[] D;
@@ -185,32 +187,109 @@ public abstract class Grafo implements Serializable {
             }
         }
     }
-    public void Dijkstra(Integer origen){
-        for (int i = 0; i < numVertices(); i++) {
-            F[i] = false;
-            D[i] = matrizAdy[origen][i];
-            camino[i] = origen;
+
+    private Double[] distancia;
+    private Boolean [] v;
+    
+    public Integer[] Dijkstra(Integer origen, Integer fin) {
+        v = new Boolean[matrizAdy.length];
+        distancia = new Double[matrizAdy.length];
+        for (int i = 0; i < matrizAdy.length; i++) {
+            distancia[i] = Double.MAX_VALUE;
+            v[i] = false;
         }
-        F[origen] = true;
-        D[origen] = 0;
-        for (int i = 1; i < numVertices(); i++) {
-            int v = minimo();
+        distancia[origen] = 0.0;
+        Integer camino[] = new Integer[matrizAdy.length];
+        camino[origen] = Integer.MIN_VALUE;
+        for (int i = 0; i < matrizAdy.length; i++) {
+            Integer na = caminoMin(distancia, v);
+        }
+        Integer camcorto[] = new Integer[this.camino.length];
+        Integer i = 0;
+        while (!Objects.equals(origen, fin)) {
+            camcorto[i] = fin;
+            fin = this.camino[fin];
+            i++;
+        }
+        camcorto[i] = origen;
+        return camcorto;
+    }
+
+    public Integer caminoMin(Double d[], Boolean m[]) {
+        double min = Integer.MAX_VALUE;
+        int aux = -1;
+        for (int i = 0; i < matrizAdy.length; i++) {
+            if (m[i] == false && d[i] <= min) {
+                min = d[i];
+                aux = i;
+            }
+        }
+        return aux;
+    }
+    
+    private Double[][] Pesos;
+    private int[] ultimo;
+    private Double[] d;
+    private Boolean[] f;
+    private Integer s, n; //Vertice origen y numero de vertices
+    
+     public void DijkstraCam(int origen) {
+         s = origen;
+         n =numVertices();
+        for (int i = 0; i < n; i++) {
+            f[i] = false;
+            d[i] = Pesos[s][i];
+            ultimo[i] = s;
+        }
+        D[s] = 0;
+        F[s] = true;
+        for (int i = 0; i < n; i++) {
+            int v = minimos();
             F[v] = true;
-            for (int j = 1; j < numVertices(); j++) {
-                if (!F[j]) {
-                    if ((D[v] + matrizAdy[v][j]) < D[j]) {
-                        D[j] = D[v] + matrizAdy[v][j];
-                        camino[j] = v;
+            for (int w = 0; w < n; w++) {
+                if (!F[w]) {
+                    if ((D[v] + Pesos[v][w]) < D[w]) {
+                        d[w] = d[v] + Pesos[v][w];
+                        ultimo[w] = v;
                     }
                 }
             }
         }
     }
-    private Integer minimo(){
+
+    public int minimos() {
+        double mx = 1000000.0;
         int v = 1;
-        for (int i = 1; i < numVertices(); i++) {
-            
+        for (int i = 0; i < n; i++) {
+            if (!F[i] && D[i] <= mx) {
+                mx = D[i];
+                v = i;
+            }
         }
         return v;
-    }    
+    }
+
+    public int minimo(double dist[], boolean b[]) {
+        double min = Integer.MAX_VALUE;
+        int index = -1;
+        for (int i = 0; i < 5; i++) {
+            if (b[i] == false && dist[i] <= min) {
+                min = dist[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public Lista<Integer> ruta(Integer destino, Lista<Integer> caminos) {
+        destino = destino;
+        Integer anterior = ultimo[destino];
+        if (!Objects.equals(destino, s)) {
+            ruta(anterior, caminos);
+            caminos.insertarNodo(destino);
+        } else {
+            caminos.insertarNodo(s);
+        }
+        return caminos;
+    }
 }
